@@ -1,3 +1,6 @@
 
 # Ignore nested git backup
 backend/.git.backup
+
+node_modules/
+package-lock.json
