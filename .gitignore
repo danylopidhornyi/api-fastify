@@ -1,0 +1,3 @@
+
+# Ignore nested git backup
+backend/.git.backup
