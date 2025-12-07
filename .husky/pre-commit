@@ -1,7 +1,8 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-# Run backend tests on pre-commit
+# Run prettier on staged files, then tests
+yarn --cwd backend lint-staged
 yarn --cwd backend test:run
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"

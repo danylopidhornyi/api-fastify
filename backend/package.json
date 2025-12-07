@@ -7,6 +7,8 @@
     "dev": "tsx watch src/server.ts",
     "start": "node --loader ts-node/esm src/server.ts",
     "prepare": "husky install",
+    "format": "prettier --write \"src/**/*.{ts,js,json,md}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,js,json,md}\"",
     "test": "vitest",
     "test:run": "vitest run",
     "test:watch": "vitest --watch",
@@ -15,7 +17,6 @@
   "dependencies": {
     "@fastify/swagger": "^9.6.1",
     "@fastify/swagger-ui": "^5.2.3",
-    "@joggr/fastify-prisma": "^6.0.1",
     "@prisma/client": "6.19.0",
     "dotenv": "^17.2.3",
     "fastify": "^5.6.2",
@@ -24,10 +25,18 @@
   "devDependencies": {
     "@types/node": "^24.10.1",
     "fastify-cli": "^7.4.1",
+    "lint-staged": "^14.0.0",
+    "prettier": "^3.0.0",
     "prisma": "6.19.0",
     "ts-node": "^10.9.2",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",
     "vitest": "^4.0.15"
+  },
+  "lint-staged": {
+    "*.{ts,js,json,md}": [
+      "prettier --write",
+      "git add"
+    ]
   }
 }
