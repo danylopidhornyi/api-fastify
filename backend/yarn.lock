@@ -1527,7 +1527,6 @@ __metadata:
     dotenv: "npm:^17.2.3"
     fastify: "npm:^5.6.2"
     fastify-cli: "npm:^7.4.1"
-    husky: "npm:^8.0.3"
     prisma: "npm:6.19.0"
     ts-node: "npm:^10.9.2"
     tsx: "npm:^4.20.6"
@@ -1740,15 +1739,6 @@ __metadata:
     agent-base: "npm:^7.1.2"
     debug: "npm:4"
   checksum: 10c0/f729219bc735edb621fa30e6e84e60ee5d00802b8247aac0d7b79b0bd6d4b3294737a337b93b86a0bd9e68099d031858a39260c976dc14cdbba238ba1f8779ac
-  languageName: node
-  linkType: hard
-
-"husky@npm:^8.0.3":
-  version: 8.0.3
-  resolution: "husky@npm:8.0.3"
-  bin:
-    husky: lib/bin.js
-  checksum: 10c0/6722591771c657b91a1abb082e07f6547eca79144d678e586828ae806499d90dce2a6aee08b66183fd8b085f19d20e0990a2ad396961746b4c8bd5bdb619d668
   languageName: node
   linkType: hard
 

@@ -151,7 +151,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/Users/danylopidhornyi/Desktop/work/fastify/backend/prisma/client",
+      "value": "/Users/danylopidhornyi/Desktop/work/fastify-api/backend/prisma/client",
       "fromEnvVar": null
     },
     "config": {
@@ -165,7 +165,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/Users/danylopidhornyi/Desktop/work/fastify/backend/prisma/schema.prisma",
+    "sourceFilePath": "/Users/danylopidhornyi/Desktop/work/fastify-api/backend/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
