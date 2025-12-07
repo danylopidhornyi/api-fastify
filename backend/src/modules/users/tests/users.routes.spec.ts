@@ -5,7 +5,7 @@ const mockCreateUser = vi.fn(async (req, reply) => reply.code(201).send({}));
 const mockGetUser = vi.fn(async (req, reply) => reply.send({}));
 const mockGetAllUsers = vi.fn(async (req, reply) => reply.send([]));
 
-vi.mock("./users.controller.js", () => {
+vi.mock("../users.controller.js", () => {
   return {
     UsersController: class {
       createUser = mockCreateUser;
@@ -15,7 +15,7 @@ vi.mock("./users.controller.js", () => {
   };
 });
 
-import userRoutes from "./users.routes.js";
+import userRoutes from "../users.routes.js";
 
 describe("userRoutes", () => {
   let app: Fastify.FastifyInstance;

@@ -1,5 +1,5 @@
 import { describe, it, beforeEach, expect, vi } from "vitest";
-import { UsersController } from "./users.controller.js";
+import { UsersController } from "../users.controller.js";
 
 const mockUser = { id: "1", name: "Alice" };
 const mockUsers = [mockUser];

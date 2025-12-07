@@ -1,5 +1,4 @@
 import { FastifyInstance, FastifyPluginAsync } from "fastify";
-import * as userController from "./users.controller.js";
 import { UsersController } from "./users.controller.js";
 
 const userRoutes: FastifyPluginAsync = async (app: FastifyInstance) => {
@@ -34,7 +33,7 @@ const userRoutes: FastifyPluginAsync = async (app: FastifyInstance) => {
         },
       },
     },
-    controller.createUser
+    controller.createUser,
   );
 
   app.get(
@@ -62,7 +61,7 @@ const userRoutes: FastifyPluginAsync = async (app: FastifyInstance) => {
         },
       },
     },
-    controller.getUser
+    controller.getUser,
   );
 
   app.get(
@@ -80,16 +79,15 @@ const userRoutes: FastifyPluginAsync = async (app: FastifyInstance) => {
               properties: {
                 id: { type: "string" },
                 email: { type: "string" },
-                created_at: { type: "string", format: "date-time" }
+                created_at: { type: "string", format: "date-time" },
               },
             },
           },
         },
       },
     },
-    controller.getAllUsers
-  )
+    controller.getAllUsers,
+  );
 };
 
 export default userRoutes;
-

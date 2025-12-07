@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import UserService from "./users.service.js";
-import AppError from "../../core/errors/app-error.js";
+import UserService from "../users.service.js";
+import AppError from "../../../core/errors/app-error.js";
 
 const mockPrisma = {
   user: {
