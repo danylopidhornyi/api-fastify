@@ -1,15 +1,20 @@
-import { buildApp } from './app.js'
+import { beforeAll, afterAll, describe, it, expect } from "vitest";
+import { buildApp } from "./app.js";
 
-const test = async () => {
-  const app = await buildApp()
+let app: any;
 
-  const response = await app.inject({
-    method: 'GET',
-    url: '/'
-  })
+beforeAll(async () => {
+  app = await buildApp();
+  await app.ready();
+});
 
-  console.log('status code: ', response.statusCode)
-  console.log('body: ', response.body)
-}
+afterAll(async () => {
+  await app.close();
+});
 
-test()
+describe("app (src)", () => {
+  it("responds on GET / (200 or 404 are acceptable)", async () => {
+    const res = await app.inject({ method: "GET", url: "/" });
+    expect([200, 404]).toContain(res.statusCode);
+  });
+});

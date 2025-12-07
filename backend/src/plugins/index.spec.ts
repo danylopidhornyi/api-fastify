@@ -9,13 +9,21 @@ const mockPrisma = {
 
 vi.mock("../modules/users/users.service.js", () => {
   return {
-    default: vi.fn(() => ({})),
+    default: class {
+      constructor() {
+        return {};
+      }
+    },
   };
 });
 
 vi.mock("../../prisma/client/index.js", () => {
   return {
-    PrismaClient: vi.fn(() => mockPrisma),
+    PrismaClient: class {
+      constructor() {
+        return mockPrisma;
+      }
+    },
   };
 });
 
