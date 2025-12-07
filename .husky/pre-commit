@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Run backend tests on pre-commit
+yarn --cwd backend test:run
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Run tests on pre-commit (run tests in backend)
+yarn --cwd backend test:run
