@@ -1,6 +1,6 @@
-import { FastifyInstance } from 'fastify';
-import userRoutes from './users.routes.js';
+import { FastifyInstance } from "fastify";
+import userRoutes from "./users.routes.js";
 
-export const UserModule = (app: FastifyInstance) => {
-  app.register(userRoutes, { prefix: '/api/users' });
+export const UserModel = (app: FastifyInstance) => {
+  app.register(userRoutes, { prefix: "/api/users" });
 };

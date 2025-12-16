@@ -1,14 +1,11 @@
 // transactions.controller.ts
 import { FastifyReply, FastifyRequest } from "fastify";
-import { PrismaClient } from "@prisma/client";
 import TransactionService from "./transactions.service.js";
 
 export class TransactionsController {
-  private prisma: PrismaClient;
   private transactionService: TransactionService;
 
-  constructor(prisma: PrismaClient, transactionService: TransactionService) {
-    this.prisma = prisma;
+  constructor(transactionService: TransactionService) {
     this.transactionService = transactionService;
   }
 

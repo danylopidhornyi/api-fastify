@@ -5,10 +5,7 @@ const transactionRoutes: FastifyPluginAsync = async (app: FastifyInstance) => {
   if (!app.prisma || !app.transactionService) {
     throw new Error("Prisma or TransactionService not initialized");
   }
-  const controller = new TransactionsController(
-    app.prisma,
-    app.transactionService,
-  );
+  const controller = new TransactionsController(app.transactionService);
   app.post(
     "/",
     {

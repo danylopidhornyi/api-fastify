@@ -9,7 +9,7 @@ datasource db {
 }
 
 model User {
-  id        String   @unique @id @default(uuid())
+  id        String   @id @unique @default(uuid())
   email     String   @unique
   password  String
   createdAt DateTime @default(now()) @map("created_at")
@@ -21,10 +21,10 @@ model User {
 }
 
 model Product {
-  id          String   @unique @id @default(uuid())
+  id          String   @id @unique @default(uuid())
   name        String
   description String?
-  price       Float
+  price       Decimal  @db.Decimal(10, 2)
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
@@ -34,11 +34,11 @@ model Product {
 }
 
 model Transaction {
-  id         String   @unique @id @default(uuid())
-  userId     String   @map("user_id")
-  productId  String   @map("product_id")
-  amount     Float
-  createdAt  DateTime @default(now()) @map("created_at")
+  id        String   @id @unique @default(uuid())
+  userId    String   @map("user_id")
+  productId String   @map("product_id")
+  amount    Decimal  @db.Decimal(10, 2)
+  createdAt DateTime @default(now()) @map("created_at")
 
   user    User    @relation(fields: [userId], references: [id])
   product Product @relation(fields: [productId], references: [id])

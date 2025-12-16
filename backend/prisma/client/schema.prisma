@@ -24,7 +24,7 @@ model Product {
   id          String   @id @unique @default(uuid())
   name        String
   description String?
-  price       Float
+  price       Decimal  @db.Decimal(10, 2)
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
@@ -37,7 +37,7 @@ model Transaction {
   id        String   @id @unique @default(uuid())
   userId    String   @map("user_id")
   productId String   @map("product_id")
-  amount    Float
+  amount    Decimal  @db.Decimal(10, 2)
   createdAt DateTime @default(now()) @map("created_at")
 
   user    User    @relation(fields: [userId], references: [id])

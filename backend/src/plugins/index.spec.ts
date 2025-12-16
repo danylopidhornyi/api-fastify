@@ -44,6 +44,14 @@ describe("registerPlugins", () => {
     expect(app.userService).toBeDefined();
   });
 
+  it("attaches productsService to Fastify instance", () => {
+    expect(app.productsService).toBeDefined();
+  });
+
+  it("attaches transactionService to Fastify instance", () => {
+    expect(app.transactionService).toBeDefined();
+  });
+
   it("swagger route is available", async () => {
     const response = await app.inject({
       method: "GET",

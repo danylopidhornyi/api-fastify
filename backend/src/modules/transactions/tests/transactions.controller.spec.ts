@@ -28,10 +28,7 @@ describe("TransactionsController", () => {
   let controller: TransactionsController;
 
   beforeEach(() => {
-    controller = new TransactionsController(
-      mockPrisma,
-      mockTransactionsService as any,
-    );
+    controller = new TransactionsController(mockTransactionsService as any);
     vi.clearAllMocks();
   });
 
