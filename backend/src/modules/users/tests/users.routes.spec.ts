@@ -41,7 +41,6 @@ describe("userRoutes", () => {
       payload: {
         email: "alice@example.com",
         password: "123456",
-        name: "Alice",
       },
     });
     expect(mockCreateUser).toHaveBeenCalled();

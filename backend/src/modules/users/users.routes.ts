@@ -14,7 +14,7 @@ const userRoutes: FastifyPluginAsync = async (app: FastifyInstance) => {
         summary: "Create a new user",
         body: {
           type: "object",
-          required: ["email", "name"],
+          required: ["email", "password"],
           properties: {
             email: { type: "string", format: "email" },
             password: { type: "string", minLength: 6 },
