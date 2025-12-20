@@ -36,6 +36,36 @@ const userRoutes: FastifyPluginAsync = async (app: FastifyInstance) => {
     controller.createUser,
   );
 
+  app.post(
+    "/login",
+    {
+      schema: {
+        tags: ["Users"],
+        summary: "User login",
+        body: {
+          type: "object",
+          required: ["email", "password"],
+          properties: {
+            email: { type: "string", format: "email" },
+            password: { type: "string" },
+          },
+        },
+        response: {
+          200: {
+            description: "User successfully logged in",
+            type: "object",
+            properties: {
+              id: { type: "string" },
+              email: { type: "string" },
+              created_at: { type: "string", format: "date-time" },
+            },
+          },
+        },
+      },
+    },
+    controller.loginUser,
+  );
+
   app.get(
     "/:id",
     {

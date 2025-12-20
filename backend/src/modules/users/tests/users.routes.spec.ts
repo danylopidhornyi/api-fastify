@@ -11,6 +11,7 @@ vi.mock("../users.controller.js", () => {
       createUser = mockCreateUser;
       getUser = mockGetUser;
       getAllUsers = mockGetAllUsers;
+      loginUser = mockCreateUser;
     },
   };
 });
@@ -41,6 +42,18 @@ describe("userRoutes", () => {
         email: "alice@example.com",
         password: "123456",
         name: "Alice",
+      },
+    });
+    expect(mockCreateUser).toHaveBeenCalled();
+  });
+
+  it("POST /login calls loginUser", async () => {
+    await app.inject({
+      method: "POST",
+      url: "/login",
+      payload: {
+        email: "alice@example.com",
+        password: "123456",
       },
     });
     expect(mockCreateUser).toHaveBeenCalled();

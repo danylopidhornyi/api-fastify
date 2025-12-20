@@ -12,13 +12,22 @@ export class UsersController {
     this.userService = userService;
   }
 
+  loginUser = async (req: FastifyRequest, reply: FastifyReply) => {
+    const user = await this.userService.login(
+      req.body as { email: string; password: string },
+    );
+    reply.send(user);
+  };
+
   createUser = async (req: FastifyRequest, reply: FastifyReply) => {
-    const user = await this.userService.create(req.body as any);
+    const user = await this.userService.create(
+      req.body as { email: string; password: string },
+    );
     reply.code(201).send(user);
   };
 
   getUser = async (req: FastifyRequest, reply: FastifyReply) => {
-    const { id } = req.params as any;
+    const { id } = req.params as { id: string };
     const user = await this.userService.getById(id);
     reply.send(user);
   };

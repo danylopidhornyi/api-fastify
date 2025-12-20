@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import * as passwordUtil from "../../../utils/password.util.js";
 import UserService from "../users.service.js";
 import AppError from "../../../core/errors/app-error.js";
 
@@ -28,6 +29,67 @@ describe("UserService", () => {
     });
     expect(result).toEqual({ id: "1", email: "a@b.com" });
     expect(mockPrisma.user.create).toHaveBeenCalled();
+  });
+
+  it("hashes password before saving", async () => {
+    mockPrisma.user.findUnique.mockResolvedValue(null);
+    const hashSpy = vi
+      .spyOn(passwordUtil, "hashPassword")
+      .mockResolvedValue("hashed-abc");
+    mockPrisma.user.create.mockResolvedValue({
+      id: "1",
+      email: "a@b.com",
+      password: "hashed-abc",
+    });
+
+    const result = await service.create({
+      email: "a@b.com",
+      password: "123456",
+    });
+
+    expect(hashSpy).toHaveBeenCalledWith("123456");
+    expect(mockPrisma.user.create).toHaveBeenCalledWith({
+      data: { email: "a@b.com", password: "hashed-abc" },
+    });
+    expect(result).toEqual({
+      id: "1",
+      email: "a@b.com",
+      password: "hashed-abc",
+    });
+  });
+
+  it("logs in successfully with valid credentials", async () => {
+    const userRecord = { id: "1", email: "a@b.com", password: "hashed-abc" };
+    mockPrisma.user.findUnique.mockResolvedValue(userRecord);
+    const verifySpy = vi
+      .spyOn(passwordUtil, "verifyPassword")
+      .mockResolvedValue(true);
+
+    const result = await service.login({
+      email: "a@b.com",
+      password: "123456",
+    });
+
+    expect(verifySpy).toHaveBeenCalledWith("hashed-abc", "123456");
+    expect(result).toEqual(userRecord);
+  });
+
+  it("throws when user not found on login", async () => {
+    mockPrisma.user.findUnique.mockResolvedValue(null);
+
+    await expect(
+      service.login({ email: "no@one.com", password: "123456" }),
+    ).rejects.toThrow(AppError);
+  });
+
+  it("throws when password is invalid", async () => {
+    const userRecord = { id: "1", email: "a@b.com", password: "hashed-abc" };
+    mockPrisma.user.findUnique.mockResolvedValue(userRecord);
+    vi.spyOn(passwordUtil, "verifyPassword").mockResolvedValue(false);
+
+    await expect(
+      service.login({ email: "a@b.com", password: "wrongpass" }),
+    ).rejects.toThrow(AppError);
   });
 
   it("throws error if email exists", async () => {
