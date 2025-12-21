@@ -45,11 +45,19 @@ function getStagedPackageJsons() {
     const out = execSync("git diff --cached --name-only --diff-filter=ACM", {
       encoding: "utf8",
     });
+    const repoRoot = (function() {
+      try {
+        return execSync("git rev-parse --show-toplevel", { encoding: "utf8" }).trim();
+      } catch (e) {
+        return process.cwd();
+      }
+    })();
+
     return out
       .split(/\r?\n/)
       .filter(Boolean)
       .filter((p) => path.basename(p) === "package.json")
-      .map((p) => path.resolve(p));
+      .map((p) => path.resolve(repoRoot, p));
   } catch (e) {
     return [];
   }
