@@ -1,11 +1,11 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-# Run prettier on staged files, then tests
+# Run prettier on staged files
 yarn --cwd backend lint-staged
-yarn --cwd backend test:run
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
 
-# Run tests on pre-commit (run tests in backend)
+# Run tests
 yarn --cwd backend test:run
+
+# Run staged static package check (prevents commit if any pinned issues)
+yarn --cwd backend check:static-packages-staged

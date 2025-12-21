@@ -12,7 +12,8 @@
     "test": "vitest",
     "test:run": "vitest run",
     "test:watch": "vitest --watch",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "check:static-packages-staged": "node ../scripts/check-static-packages.js --staged"
   },
   "dependencies": {
     "@fastify/jwt": "^10.0.0",
