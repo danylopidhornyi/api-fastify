@@ -9,6 +9,7 @@ const transactionRoutes: FastifyPluginAsync = async (app: FastifyInstance) => {
   app.post(
     "/",
     {
+      preHandler: app.authenticate,
       schema: {
         tags: ["Transactions"],
         summary: "Create a new transaction",
@@ -107,6 +108,7 @@ const transactionRoutes: FastifyPluginAsync = async (app: FastifyInstance) => {
   app.get(
     "/user/:user_id",
     {
+      preHandler: app.authenticate,
       schema: {
         tags: ["Transactions"],
         summary: "Get transactions by User ID",

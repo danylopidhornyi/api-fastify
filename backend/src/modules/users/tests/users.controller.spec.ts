@@ -8,6 +8,7 @@ const mockUserService = {
   create: vi.fn(),
   getById: vi.fn(),
   getAll: vi.fn(),
+  login: vi.fn(),
 };
 
 const mockPrisma = {} as any;
@@ -60,5 +61,29 @@ describe("UsersController", () => {
 
     expect(mockUserService.getAll).toHaveBeenCalled();
     expect(reply.send).toHaveBeenCalledWith(mockUsers);
+  });
+
+  it("loginUser sends user and accessToken", async () => {
+    const user = { id: "1", email: "a@b.com" };
+    mockUserService.login = vi.fn().mockResolvedValueOnce(user);
+
+    const req: any = createReq({ email: "a@b.com", password: "secret" });
+    const reply = createReply();
+    req.server = { jwt: { sign: vi.fn(() => "signed-token-xyz") } } as any;
+
+    await controller.loginUser(req, reply);
+
+    expect(mockUserService.login).toHaveBeenCalledWith({
+      email: "a@b.com",
+      password: "secret",
+    });
+    expect(req.server.jwt.sign).toHaveBeenCalledWith({
+      sub: user.id,
+      email: user.email,
+    });
+    expect(reply.send).toHaveBeenCalledWith({
+      accessToken: "signed-token-xyz",
+      user,
+    });
   });
 });

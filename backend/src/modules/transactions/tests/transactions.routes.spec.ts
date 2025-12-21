@@ -1,6 +1,10 @@
 import Fastify from "fastify";
 import { vi, describe, it, expect, beforeAll, afterAll } from "vitest";
 
+const mockAuthenticate = vi.fn(async (req, reply) => {
+  req.user = { sub: "1", email: "alice@example.com" };
+});
+
 const mockCreateTransaction = vi.fn(async (req, reply) =>
   reply.code(201).send({}),
 );
@@ -31,6 +35,7 @@ describe("transactionRoutes", () => {
     app = Fastify();
     app.decorate("prisma", {});
     app.decorate("transactionService", {});
+    app.decorate("authenticate", mockAuthenticate);
     await app.register(transactionRoutes);
     await app.ready();
   });
@@ -52,11 +57,13 @@ describe("transactionRoutes", () => {
       },
     });
     expect(mockCreateTransaction).toHaveBeenCalled();
+    expect(mockAuthenticate).toHaveBeenCalled();
   });
 
   it("GET / calls getAllTransactions", async () => {
     await app.inject({ method: "GET", url: "/" });
     expect(mockGetAllTransactions).toHaveBeenCalled();
+    expect(mockAuthenticate).toHaveBeenCalled();
   });
 
   it("GET /user/:userId calls getTransactionsByUserId", async () => {
@@ -65,6 +72,7 @@ describe("transactionRoutes", () => {
       url: "/user/b1f5f6e1-3c4e-4d2e-9f7a-8f9e8c6d7c3a",
     });
     expect(mockGetTransactionsByUserId).toHaveBeenCalled();
+    expect(mockAuthenticate).toHaveBeenCalled();
   });
 
   it("GET /:id calls getTransaction", async () => {
@@ -73,5 +81,6 @@ describe("transactionRoutes", () => {
       url: "/2504f6de-d6db-4197-98e0-339e9ed1d9f3",
     });
     expect(mockGetTransaction).toHaveBeenCalled();
+    expect(mockAuthenticate).toHaveBeenCalled();
   });
 });

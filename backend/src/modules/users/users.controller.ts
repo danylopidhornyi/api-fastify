@@ -16,7 +16,16 @@ export class UsersController {
     const user = await this.userService.login(
       req.body as { email: string; password: string },
     );
-    reply.send(user);
+
+    const accessToken = req.server.jwt.sign({
+      sub: user.id,
+      email: user.email,
+    });
+
+    reply.send({
+      accessToken,
+      user,
+    });
   };
 
   createUser = async (req: FastifyRequest, reply: FastifyReply) => {

@@ -55,9 +55,14 @@ const userRoutes: FastifyPluginAsync = async (app: FastifyInstance) => {
             description: "User successfully logged in",
             type: "object",
             properties: {
-              id: { type: "string" },
-              email: { type: "string" },
-              created_at: { type: "string", format: "date-time" },
+              accessToken: { type: "string" },
+              user: {
+                type: "object",
+                properties: {
+                  id: { type: "string" },
+                  email: { type: "string" },
+                },
+              },
             },
           },
         },
@@ -69,6 +74,7 @@ const userRoutes: FastifyPluginAsync = async (app: FastifyInstance) => {
   app.get(
     "/:id",
     {
+      preHandler: app.authenticate,
       schema: {
         tags: ["Users"],
         summary: "Get user by ID",
@@ -97,6 +103,7 @@ const userRoutes: FastifyPluginAsync = async (app: FastifyInstance) => {
   app.get(
     "/",
     {
+      preHandler: app.authenticate,
       schema: {
         tags: ["Users"],
         summary: "Get all users",

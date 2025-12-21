@@ -17,17 +17,21 @@ class UserService {
   async login(data: { email: string; password: string }) {
     const user = await this.prisma.user.findUnique({
       where: { email: data.email },
+      select: { id: true, email: true, password: true },
     });
     if (!user) throw new AppError("Invalid credentials", 401);
 
     const isPasswordValid = await verifyPassword(user.password, data.password);
     if (!isPasswordValid) throw new AppError("Invalid credentials", 401);
 
-    return user;
+    return { id: user.id, email: user.email };
   }
 
   async getById(id: string) {
-    const user = await this.prisma.user.findUnique({ where: { id } });
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+      select: { id: true, email: true },
+    });
     if (!user) throw new AppError("User not found", 404);
 
     return user;

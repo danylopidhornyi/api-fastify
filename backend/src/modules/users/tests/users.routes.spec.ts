@@ -4,6 +4,18 @@ import { vi, describe, it, expect, beforeAll, afterAll } from "vitest";
 const mockCreateUser = vi.fn(async (req, reply) => reply.code(201).send({}));
 const mockGetUser = vi.fn(async (req, reply) => reply.send({}));
 const mockGetAllUsers = vi.fn(async (req, reply) => reply.send([]));
+const mockLoginUser = vi.fn(async (req, reply) =>
+  reply.code(200).send({
+    accessToken: "token-xyz",
+    user: {
+      id: "1",
+      email: "alice@example.com",
+    },
+  }),
+);
+const mockAuthenticate = vi.fn(async (req, reply) => {
+  req.user = { sub: "1", email: "alice@example.com" };
+});
 
 vi.mock("../users.controller.js", () => {
   return {
@@ -11,7 +23,7 @@ vi.mock("../users.controller.js", () => {
       createUser = mockCreateUser;
       getUser = mockGetUser;
       getAllUsers = mockGetAllUsers;
-      loginUser = mockCreateUser;
+      loginUser = mockLoginUser;
     },
   };
 });
@@ -25,6 +37,7 @@ describe("userRoutes", () => {
     app = Fastify();
     app.decorate("prisma", {});
     app.decorate("userService", {});
+    app.decorate("authenticate", mockAuthenticate);
     await app.register(userRoutes);
     await app.ready();
   });
@@ -55,16 +68,18 @@ describe("userRoutes", () => {
         password: "123456",
       },
     });
-    expect(mockCreateUser).toHaveBeenCalled();
+    expect(mockLoginUser).toHaveBeenCalled();
   });
 
   it("GET / calls getAllUsers", async () => {
     await app.inject({ method: "GET", url: "/" });
     expect(mockGetAllUsers).toHaveBeenCalled();
+    expect(mockAuthenticate).toHaveBeenCalled();
   });
 
-  it("GET /:id calls getUser", async () => {
+  it("GET /:id calls getUser and runs authenticate preHandler", async () => {
     await app.inject({ method: "GET", url: "/1" });
     expect(mockGetUser).toHaveBeenCalled();
+    expect(mockAuthenticate).toHaveBeenCalled();
   });
 });

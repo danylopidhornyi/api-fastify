@@ -1,4 +1,4 @@
-import type { FastifyInstance } from "fastify";
+import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { PrismaClient } from "../../prisma/client/index.js";
 import UserService from "../modules/users/users.service.js";
 import { swaggerPlugin } from "./swagger.plugin.js";
@@ -6,6 +6,9 @@ import TransactionService from "../modules/transactions/transactions.service.js"
 import ProductsService from "../modules/products/products.service.js";
 
 export const registerPlugins = async (app: FastifyInstance) => {
+  // Register jwt plugin
+  await app.register(import("./jwt.plugin.js"));
+
   // Initialize Prisma Client
   const prisma = new PrismaClient();
   await prisma.$connect();

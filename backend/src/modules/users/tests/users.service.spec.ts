@@ -71,7 +71,19 @@ describe("UserService", () => {
     });
 
     expect(verifySpy).toHaveBeenCalledWith("hashed-abc", "123456");
+    expect(result).toEqual({ id: "1", email: "a@b.com" });
+  });
+
+  it("returns id, email, JWT on login", async () => {
+    const userRecord = { id: "2", email: "b@c.com" };
+    mockPrisma.user.findUnique.mockResolvedValue(userRecord);
+    vi.spyOn(passwordUtil, "verifyPassword").mockResolvedValue(true);
+
+    const result = await service.login({ email: "b@c.com", password: "pw" });
+
     expect(result).toEqual(userRecord);
+    expect(result).toHaveProperty("id");
+    expect(result).toHaveProperty("email");
   });
 
   it("throws when user not found on login", async () => {
