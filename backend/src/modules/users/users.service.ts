@@ -10,18 +10,26 @@ class UserService {
     });
     if (exists) throw new AppError("Email already used", 400);
 
-    data.password = await hashPassword(data.password);
-    return await this.prisma.user.create({ data });
+    const passwordHash = await hashPassword(data.password);
+    return await this.prisma.user.create({
+      data: {
+        email: data.email,
+        passwordHash,
+      },
+    });
   }
 
   async login(data: { email: string; password: string }) {
     const user = await this.prisma.user.findUnique({
       where: { email: data.email },
-      select: { id: true, email: true, password: true },
+      select: { id: true, email: true, passwordHash: true },
     });
     if (!user) throw new AppError("Invalid credentials", 401);
 
-    const isPasswordValid = await verifyPassword(user.password, data.password);
+    const isPasswordValid = await verifyPassword(
+      user.passwordHash,
+      data.password,
+    );
     if (!isPasswordValid) throw new AppError("Invalid credentials", 401);
 
     return { id: user.id, email: user.email };
@@ -37,8 +45,8 @@ class UserService {
     return user;
   }
 
-  async getAll() {
-    return await this.prisma.user.findMany();
+  getAll() {
+    return this.prisma.user.findMany();
   }
 }
 

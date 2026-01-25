@@ -3,13 +3,14 @@ import AppError from "../../core/errors/app-error.js";
 
 class TransactionService {
   constructor(private prisma: PrismaClient) {}
-  async create(data: {
-    user_id: string;
-    product_id: string;
+
+  create(data: {
+    userId: string;
+    productId: string;
     amount: number;
     type: "credit" | "debit";
   }) {
-    return await this.prisma.transaction.create({ data });
+    return this.prisma.transaction.create({ data });
   }
 
   async getById(id: string) {
@@ -21,8 +22,8 @@ class TransactionService {
     return transaction;
   }
 
-  async getByUserId(user_id: string) {
-    return await this.prisma.transaction.findMany({ where: { user_id } });
+  async getByUserId(userId: string) {
+    return await this.prisma.transaction.findMany({ where: { userId } });
   }
 
   async getAll() {

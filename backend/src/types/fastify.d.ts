@@ -2,12 +2,14 @@ import { UsersService } from "../user/users.service.js";
 import { TransactionService } from "../transactions/transactions.service.js";
 import { ProductsService } from "../products/products.service.js";
 import { PrismaClient } from "@prisma/client";
+import OrdersService from "../modules/orders/orders.service.ts";
 
 declare module "fastify" {
   interface FastifyInstance {
     userService: UsersService;
     transactionService: TransactionService;
     productsService: ProductsService;
+    ordersService: OrdersService;
     prisma: PrismaClient;
     authenticate: (
       request: FastifyRequest,

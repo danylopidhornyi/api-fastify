@@ -6,6 +6,7 @@
     "build": "tsc -p tsconfig.json",
     "dev": "tsx watch src/server.ts",
     "start": "node --loader ts-node/esm src/server.ts",
+    "seed:local": "node prisma/seed.js",
     "prepare": "husky install",
     "format": "prettier --write \"src/**/*.{ts,js,json,md}\"",
     "format:check": "prettier --check \"src/**/*.{ts,js,json,md}\"",
@@ -26,7 +27,6 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
-    "@types/node": "^24.10.1",
     "fastify-cli": "^7.4.1",
     "lint-staged": "^14.0.0",
     "prettier": "^3.0.0",
@@ -35,6 +35,9 @@
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",
     "vitest": "^4.0.15"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
   },
   "lint-staged": {
     "*.{ts,js,json,md}": [

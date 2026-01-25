@@ -38,7 +38,7 @@ describe("productRoutes", () => {
   it("POST /products calls createProduct", async () => {
     await app.inject({
       method: "POST",
-      url: "/products",
+      url: "/",
       payload: {
         name: "Sample Product",
         description: "This is a sample product.",
@@ -49,13 +49,13 @@ describe("productRoutes", () => {
   });
 
   it("GET /products calls getAllProducts", async () => {
-    await app.inject({ method: "GET", url: "/products" });
+    await app.inject({ method: "GET", url: "/" });
     expect(mockGetAllProducts).toHaveBeenCalled();
   });
 
   it("GET /products/:id calls getProductById", async () => {
     const sampleId = "123e4567-e89b-12d3-a456-426614174000";
-    await app.inject({ method: "GET", url: `/products/${sampleId}` });
+    await app.inject({ method: "GET", url: `/${sampleId}` });
     expect(mockGetProductById).toHaveBeenCalled();
   });
 });

@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "./client"
 }
 
 datasource db {
@@ -8,40 +7,135 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+/**
+ * =======================
+ * ENUMS
+ * =======================
+ */
+
+enum OrderStatus {
+  PENDING
+  PAID
+  CANCELED
+  REFUNDED
+}
+
+enum TransactionStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  REFUNDED
+}
+
+/**
+ * =======================
+ * USER
+ * =======================
+ */
+
 model User {
-  id        String   @id @unique @default(uuid())
-  email     String   @unique
-  password  String
+  id           String @id @default(uuid())
+  email        String @unique
+  passwordHash String @map("password_hash")
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  orders       Order[]
   transactions Transaction[]
 
   @@map("users")
 }
 
+/**
+ * =======================
+ * PRODUCT
+ * =======================
+ */
+
 model Product {
-  id          String   @id @unique @default(uuid())
+  id          String  @id @default(uuid())
   name        String
   description String?
-  price       Decimal  @db.Decimal(10, 2)
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  price       Decimal @db.Decimal(10, 2)
 
-  transactions Transaction[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  orderItems OrderItem[]
 
   @@map("products")
 }
 
-model Transaction {
-  id        String   @id @unique @default(uuid())
-  userId    String   @map("user_id")
-  productId String   @map("product_id")
-  amount    Decimal  @db.Decimal(10, 2)
-  createdAt DateTime @default(now()) @map("created_at")
+/**
+ * =======================
+ * ORDER
+ * =======================
+ */
 
-  user    User    @relation(fields: [userId], references: [id])
+model Order {
+  id     String @id @default(uuid())
+  userId String @map("user_id")
+
+  status OrderStatus @default(PENDING)
+  total  Decimal     @db.Decimal(10, 2)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user         User          @relation(fields: [userId], references: [id])
+  items        OrderItem[]
+  transactions Transaction[]
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("orders")
+}
+
+/**
+ * =======================
+ * ORDER ITEM (JOIN TABLE)
+ * =======================
+ */
+
+model OrderItem {
+  orderId   String @map("order_id")
+  productId String @map("product_id")
+
+  quantity Int
+  price    Decimal @db.Decimal(10, 2) // price at purchase time
+
+  order   Order   @relation(fields: [orderId], references: [id])
   product Product @relation(fields: [productId], references: [id])
 
+  @@id([orderId, productId])
+  @@map("order_items")
+}
+
+/**
+ * =======================
+ * TRANSACTION
+ * =======================
+ */
+
+model Transaction {
+  id      String @id @default(uuid())
+  userId  String @map("user_id")
+  orderId String @map("order_id")
+
+  amount Decimal           @db.Decimal(10, 2)
+  status TransactionStatus @default(PENDING)
+
+  provider    String?
+  providerRef String? @map("provider_ref")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user  User  @relation(fields: [userId], references: [id])
+  order Order @relation(fields: [orderId], references: [id])
+
+  @@index([userId])
+  @@index([orderId])
   @@map("transactions")
 }

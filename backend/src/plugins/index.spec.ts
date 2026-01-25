@@ -1,6 +1,5 @@
-import { describe, it, beforeAll, afterAll, expect, vi } from "vitest";
+import { describe, it, beforeAll, expect, vi } from "vitest";
 import Fastify from "fastify";
-import { registerPlugins } from "./index.js";
 
 const mockPrisma = {
   $connect: vi.fn(),
@@ -9,23 +8,19 @@ const mockPrisma = {
 
 vi.mock("../modules/users/users.service.js", () => {
   return {
-    default: class {
-      constructor() {
-        return {};
-      }
-    },
+    default: class {},
   };
 });
 
-vi.mock("../../prisma/client/index.js", () => {
+vi.mock("@prisma/client", () => {
   return {
-    PrismaClient: class {
-      constructor() {
-        return mockPrisma;
-      }
-    },
+    PrismaClient: vi.fn().mockImplementation(function () {
+      return mockPrisma;
+    }),
   };
 });
+
+import { registerPlugins } from "./index.js";
 
 describe("registerPlugins", () => {
   let app: any;
@@ -35,21 +30,11 @@ describe("registerPlugins", () => {
     await registerPlugins(app);
   });
 
-  afterAll(async () => {
-    await app.close();
-  });
-
-  it("attaches prisma and userService to Fastify instance", () => {
+  it("attaches prisma and modules", () => {
     expect(app.prisma).toBe(mockPrisma);
-    expect(app.userService).toBeDefined();
-  });
-
-  it("attaches productsService to Fastify instance", () => {
-    expect(app.productsService).toBeDefined();
-  });
-
-  it("attaches transactionService to Fastify instance", () => {
-    expect(app.transactionService).toBeDefined();
+    expect(app.usersModule).toBeDefined();
+    expect(app.productsModule).toBeDefined();
+    expect(app.transactionsModule).toBeDefined();
   });
 
   it("swagger route is available", async () => {
@@ -61,7 +46,11 @@ describe("registerPlugins", () => {
   });
 
   it("onClose disconnects Prisma", async () => {
+    const app = Fastify();
+    await registerPlugins(app);
+
     await app.close();
+
     expect(mockPrisma.$disconnect).toHaveBeenCalled();
   });
 });

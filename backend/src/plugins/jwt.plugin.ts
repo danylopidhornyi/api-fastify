@@ -10,7 +10,7 @@ async function jwtPlugin(app: FastifyInstance) {
   await app.register(jwt, {
     secret: process.env.JWT_SECRET,
     sign: {
-      expiresIn: "15m",
+      expiresIn: "1h",
     },
   });
 

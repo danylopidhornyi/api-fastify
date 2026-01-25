@@ -1,5 +1,6 @@
 import { FastifyInstance, FastifyPluginAsync } from "fastify";
 import { UsersController } from "./users.controller.js";
+import { redactFields } from "./users.utils.js";
 
 const userRoutes: FastifyPluginAsync = async (app: FastifyInstance) => {
   if (!app.prisma || !app.userService) {
@@ -74,7 +75,10 @@ const userRoutes: FastifyPluginAsync = async (app: FastifyInstance) => {
   app.get(
     "/:id",
     {
-      preHandler: app.authenticate,
+      preHandler: [app.authenticate],
+      preSerialization: async (req: any, reply: any, payload: any) => {
+        return redactFields(payload, ["password", "resetToken"]);
+      },
       schema: {
         tags: ["Users"],
         summary: "Get user by ID",
@@ -103,7 +107,10 @@ const userRoutes: FastifyPluginAsync = async (app: FastifyInstance) => {
   app.get(
     "/",
     {
-      preHandler: app.authenticate,
+      preHandler: [app.authenticate],
+      preSerialization: async (req: any, reply: any, payload: any) => {
+        return redactFields(payload, ["password", "resetToken"]);
+      },
       schema: {
         tags: ["Users"],
         summary: "Get all users",

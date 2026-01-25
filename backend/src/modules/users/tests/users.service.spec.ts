@@ -39,7 +39,7 @@ describe("UserService", () => {
     mockPrisma.user.create.mockResolvedValue({
       id: "1",
       email: "a@b.com",
-      password: "hashed-abc",
+      passwordHash: "hashed-abc",
     });
 
     const result = await service.create({
@@ -49,17 +49,21 @@ describe("UserService", () => {
 
     expect(hashSpy).toHaveBeenCalledWith("123456");
     expect(mockPrisma.user.create).toHaveBeenCalledWith({
-      data: { email: "a@b.com", password: "hashed-abc" },
+      data: { email: "a@b.com", passwordHash: "hashed-abc" },
     });
     expect(result).toEqual({
       id: "1",
       email: "a@b.com",
-      password: "hashed-abc",
+      passwordHash: "hashed-abc",
     });
   });
 
   it("logs in successfully with valid credentials", async () => {
-    const userRecord = { id: "1", email: "a@b.com", password: "hashed-abc" };
+    const userRecord = {
+      id: "1",
+      email: "a@b.com",
+      passwordHash: "hashed-abc",
+    };
     mockPrisma.user.findUnique.mockResolvedValue(userRecord);
     const verifySpy = vi
       .spyOn(passwordUtil, "verifyPassword")

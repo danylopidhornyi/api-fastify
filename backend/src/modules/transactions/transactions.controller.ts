@@ -1,4 +1,3 @@
-// transactions.controller.ts
 import { FastifyReply, FastifyRequest } from "fastify";
 import TransactionService from "./transactions.service.js";
 

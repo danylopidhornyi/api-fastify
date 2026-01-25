@@ -1,9 +1,10 @@
-import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import { PrismaClient } from "../../prisma/client/index.js";
-import UserService from "../modules/users/users.service.js";
+import type { FastifyInstance } from "fastify";
 import { swaggerPlugin } from "./swagger.plugin.js";
-import TransactionService from "../modules/transactions/transactions.service.js";
-import ProductsService from "../modules/products/products.service.js";
+import { PrismaClient } from "@prisma/client";
+
+import usersModule from "../modules/users/index.js";
+import productsModule from "../modules/products/index.js";
+import transactionsModule from "../modules/transactions/index.js";
 
 export const registerPlugins = async (app: FastifyInstance) => {
   // Register jwt plugin
@@ -14,15 +15,10 @@ export const registerPlugins = async (app: FastifyInstance) => {
   await prisma.$connect();
   app.decorate("prisma", prisma);
 
-  // Register services
-  const userService = new UserService(prisma);
-  app.decorate("userService", userService);
-
-  const transactionService = new TransactionService(prisma);
-  app.decorate("transactionService", transactionService);
-
-  const productsService = new ProductsService(prisma);
-  app.decorate("productsService", productsService);
+  // Attach modules for tests and external access
+  app.decorate("usersModule", usersModule);
+  app.decorate("productsModule", productsModule);
+  app.decorate("transactionsModule", transactionsModule);
 
   // Register Swagger plugin
   await app.register(swaggerPlugin);

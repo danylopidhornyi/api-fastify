@@ -10,7 +10,7 @@ export const productRoutes: FastifyPluginAsync = async (
   const controller = new ProductsController(app.productsService);
 
   app.get(
-    "/products",
+    "/",
     {
       schema: {
         tags: ["Products"],
@@ -37,7 +37,7 @@ export const productRoutes: FastifyPluginAsync = async (
   );
 
   app.get(
-    "/products/:id",
+    "/:id",
     {
       schema: {
         tags: ["Products"],
@@ -75,7 +75,7 @@ export const productRoutes: FastifyPluginAsync = async (
   );
 
   app.post(
-    "/products",
+    "/",
     {
       schema: {
         tags: ["Products"],

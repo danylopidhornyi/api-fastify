@@ -1,4 +1,3 @@
-// users.controller.ts
 import { FastifyReply, FastifyRequest } from "fastify";
 import { PrismaClient } from "@prisma/client";
 import UserService from "./users.service.js";
@@ -21,7 +20,6 @@ export class UsersController {
       sub: user.id,
       email: user.email,
     });
-
     reply.send({
       accessToken,
       user,
